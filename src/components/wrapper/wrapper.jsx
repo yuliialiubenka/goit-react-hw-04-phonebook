@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useStyles } from "./wrapperStyles";
 import Phone from "../../data/phone.png";
 
-export const Wrapper = ({ children, ...PropTypes }) => {
+export const Wrapper = ({ children, ...props }) => {
     const classes = useStyles();
     
     return (
@@ -12,7 +12,7 @@ export const Wrapper = ({ children, ...PropTypes }) => {
         }}
         >
             <div className={classes.wrapperItem}>
-                <h1 className={classes.title}>{PropTypes.title}</h1>
+                <h1 className={classes.title}>{props.title}</h1>
                 {children}
             </div>
 

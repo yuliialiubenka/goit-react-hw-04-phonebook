@@ -1,97 +1,88 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { Wrapper } from './wrapper/wrapper';
 import data from '../data/data.json';
 import { ContactForm } from './contactForm/contactForm';
 import { ContactList } from './contactList/contactList';
 import ContactFilter from './contactFilter/contactFilter';
+import { EmptyBlock } from './emptyBlock/emptyBlock';
 
-export class App extends Component {
-  state = {
-    contacts: [
-      {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
-      {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-      {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-      {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
-    ],
-    filter: '',
-    name: '',
-    number: ''
-  }
+export const App = () => {
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(window.localStorage.getItem('contacts'));
+  });
+
+  const [filter, setFilter] = useState('');
+
+  // Saving contacts in localStorage 
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   // Adding a new contact to your contact list
-  addContact = contact => {
-    const isInContacts = this.state.contacts.some(
-      ({ name }) => name.toLowerCase() === contact.name.toLowerCase()
+  const addContact = contact => {
+    const isInContacts = contacts.some(
+      ({ name }) => name.toLowerCase() === contact.name.toLowerCase().trim()
     );
 
     if (isInContacts) {
       alert(`${contact.name} is already in contacts`);
       return;
     }
-    this.setState(prevState => ({
-      contacts: [{ id: nanoid(), ...contact }, ...prevState.contacts],
-    }));
+
+    setContacts(prevContacts => [ ...prevContacts, { id: nanoid(), ...contact },]);
   };
 
   // Changing the filter value
-  changeFilter = event => {
-    this.setState({ filter: event.target.value });
+  const changeFilter = event => {
+    setFilter(event.target.value.trim());
   };
 
   // Getting the filtered contacts
-  getVisibleContacts = () => {
-    const { filter, contacts } = this.state;
+  const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
 
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
+    return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
   };
 
   // Removing a contact from your list
-  removeContact = contactId => {
-    this.setState(prevState => {
-      return {
-        contacts: prevState.contacts.filter(({ id }) => id !== contactId),
-      };
-    });
+  const removeContact = contactId => {
+    setContacts(prevContacts => prevContacts.filter(contact => contact.id !== contactId));
   };
 
-  render() {
+  const visibleContacts = getVisibleContacts();
+  let filterContent;
 
-    const visibleContacts = this.getVisibleContacts();
-    const { filter } = this.state;
-
-    return (
-      <>
-        <Wrapper
-          title={data.title}
-        >
-          <ContactForm 
-            onSubmit={this.addContact} 
-            btnText={data.btnText}
-          />
-            {this.state.contacts.length > 0 ? (
-              <ContactFilter 
-                value={filter} 
-                onChangeFilter={this.changeFilter}
-                title={data.filterTitle}
-              />
-            ) : (
-              <div className='emptyBlock'>
-                <p>{data.emptyText1}</p>
-                <p>{data.emptyText2}</p>
-              </div>
-            )}
-            {this.state.contacts.length > 0 && (
-              <ContactList
-                contacts={visibleContacts}
-                onRemoveContact={this.removeContact}
-              />
-            )}
-        </Wrapper>
-      </>
-    )
+  if (contacts.length > 0) {
+    filterContent = <ContactFilter 
+                      value={filter} 
+                      onChangeFilter={changeFilter}
+                      title={data.filterTitle}
+                    />
+  } else if(contacts.length === 0) {
+    filterContent = <EmptyBlock
+                      emptyText1={data.emptyText1}
+                      emptyText2={data.emptyText2}
+                    />
   }
+
+  return (
+    <>
+      <Wrapper
+        title={data.title}
+      >
+        <ContactForm 
+          onSubmit={addContact} 
+          btnText={data.btnText}
+        />
+          {filterContent}
+          {contacts.length > 0 && (
+            <ContactList
+              contacts={visibleContacts}
+              onRemoveContact={removeContact}
+            />
+          )}
+      </Wrapper>
+    </>
+  )
 }

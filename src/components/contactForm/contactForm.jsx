@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 import PhoneIcon from '../../data/phone-icon.svg';
 import NameIcon from "../../data/name-icon.svg";
 
-export const ContactForm = ({ onSubmit, ...PropTypes }) => {
+export const ContactForm = ({ onSubmit, ...props }) => {
     const classes = useStyles();
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
@@ -48,7 +48,7 @@ export const ContactForm = ({ onSubmit, ...PropTypes }) => {
                     value={name}
                     onChange={handleChange}
                     placeholder='Name'
-                    pattern="^[a-zA-Zа-яА-Я]+((['\-][a-zA-Zа-яА-Я])?[a-zA-Zа-яА-Я]*)*$"
+                    minLength="2"
                     title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
                     required
                 />
@@ -72,7 +72,7 @@ export const ContactForm = ({ onSubmit, ...PropTypes }) => {
                     required
                 />
             </label>
-            <button className={classes.formButton} type="submit">{PropTypes.btnText}</button>
+            <button className={classes.formButton} type="submit">{props.btnText}</button>
         </form>
     );
 };

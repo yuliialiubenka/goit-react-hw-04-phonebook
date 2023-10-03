@@ -17,10 +17,13 @@ export const useStyles = createUseStyles({
         backgroundSize: "125%",
         backgroundPosition: "center",
         "@media (max-width: 480px)": {
+            top: 0,
+            left: 0,
+            transform: "translate(0, 0)",
             backgroundImage: "none !important",
             width: '100%',
             padding: 0,
-            height: "100vh"
+            height: "100%"
         }
     },
     wrapperItem: {

@@ -14,8 +14,8 @@ export const useStyles = createUseStyles({
         },
         marginRight: "-10px",
         "@media (max-width: 480px)": {
-            marginRight: "-2px",
-            height: "calc(100vh - 340px)"
+            marginRight: "-4px",
+            height: "calc(100% - 340px)",
         }
     },
     contactListItem: {

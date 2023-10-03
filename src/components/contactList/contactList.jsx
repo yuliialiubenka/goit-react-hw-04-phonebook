@@ -4,12 +4,12 @@ import ContactIcon from "../../data/contact-icon.svg";
 import DeleteIcon from "../../data/delete-icon.svg";
 import { getRandomHexColor } from './getRandomHexColor';
 
-export const ContactList = ({ ...PropTypes }) => {
+export const ContactList = ({ ...props }) => {
     const classes = useStyles();
     
     return (
         <ul className={classes.contactList}>
-            {PropTypes.contacts.map(contact => (
+            {props.contacts.map(contact => (
                 <li key={contact.id} className={classes.contactListItem}>
                     <img
                         className={classes.contactImg}
@@ -26,7 +26,7 @@ export const ContactList = ({ ...PropTypes }) => {
                         className={classes.contactListButton}
                         type="button"
                         name="delete"
-                        onClick={() => PropTypes.onRemoveContact(contact.id)}
+                        onClick={() => props.onRemoveContact(contact.id)}
                     >
                         <img
                             className={classes.contactImg}
